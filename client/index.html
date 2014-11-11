@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>chatterbox</title>
+
     <link rel="stylesheet" href="styles/styles.css">
 
     <!-- dependencies -->
@@ -14,16 +15,26 @@
     <script src="scripts/app.js"></script>
   </head>
   <body>
-  <div class="rooms">Rooms:
+  <div class="rooms">
+  <h1>Rooms:</h1>
   <p class="allRooms">View All Rooms</p>
   </div>
 
   <br>
     <div id="main">
+
       <label for="msg">Message:
       <input type="text" name="msg"/></label>
       <button id="sendMsg">Send</button>
 
+      <br><br>
+      <label for="createRoom">New room:
+      <input type="text" id="createRoom"/></label>
+      <button id="makeRoom">Create</button>
+
+      <p>Current room:
+        <span class="roomTracker"> Showing all rooms</span>
+      </p>
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
       <div class="messages"></div>
