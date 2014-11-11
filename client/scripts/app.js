@@ -9,9 +9,14 @@ var escaper = function(message) {
 
 var roomBuilder = function(room) {
   if (rooms.indexOf(room) === -1) {
+    //removes spaces in room name
+    var squishedRoom = escaper(room).split(' ').join('');
     rooms.push(room);
-    $('.rooms').append('<p class=' + escaper(room)+ '>' + escaper(room) + '</p>');
-    $('.' + escaper(room)).click(function() { currentRoom = $(this).attr('class'); });
+    $('.rooms').append('<p class=' + squishedRoom + '>' + escaper(room) + '</p>');
+    $('.' + squishedRoom).click(function() {
+      currentRoom = $(this).attr('class');
+      console.log(currentRoom);
+    });
   }
 
 };
@@ -21,7 +26,11 @@ var messageDisplayer = function(messages, room) {
   for (var i = 0; i < messages.results.length; i++) {
     //call roomBuilder with new room
     roomBuilder(messages.results[i].roomname);
-    if (messages.results[i].roomname === room || room === undefined) {
+    if(messages.results[i].roomname) {
+      //removes spaces in room name
+      var squishedRoom = messages.results[i].roomname.split(' ').join('');
+    }
+    if (squishedRoom === room || room === undefined) {
       // console.log(messages.results[i]);
       var name = messages.results[i].username;
       var msg = messages.results[i].text;
@@ -41,7 +50,7 @@ var getMessages = function() {
     },
     success: function (data) {
       // console.log(data);
-      messageDisplayer(data);
+      messageDisplayer(data, currentRoom);
     },
     error: function (data) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -77,7 +86,10 @@ $(document).ready(function() {
   $('button').click(function() {
     sendMessage($('input').val());
     // console.log($('input').val());
-  })
+  });
+  $('.allRooms').click(function() {
+    currentRoom = undefined;
+  });
 });
 
 getMessages();
