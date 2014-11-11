@@ -1,16 +1,32 @@
 // YOUR CODE HERE:
+var rooms = [];
+var currentRoom;
 var escaper = function(message) {
   var div = document.createElement('div');
   div.appendChild(document.createTextNode(message));
   return div.innerHTML;
 };
 
-var messageDisplayer = function(messages) {
+var roomBuilder = function(room) {
+  if (rooms.indexOf(room) === -1) {
+    rooms.push(room);
+    $('.rooms').append('<p class=' + escaper(room)+ '>' + escaper(room) + '</p>');
+    $('.' + escaper(room)).click(function() { currentRoom = $(this).attr('class'); });
+  }
+
+};
+
+var messageDisplayer = function(messages, room) {
   $('.messages').html('');
   for (var i = 0; i < messages.results.length; i++) {
-    var name = messages.results[i].username;
-    var msg = messages.results[i].text;
-    $('.messages').append('<p>' + escaper(name) + ': ' + escaper(msg) + '</p>');
+    //call roomBuilder with new room
+    roomBuilder(messages.results[i].roomname);
+    if (messages.results[i].roomname === room || room === undefined) {
+      // console.log(messages.results[i]);
+      var name = messages.results[i].username;
+      var msg = messages.results[i].text;
+      $('.messages').append('<p>' + escaper(name) + ': ' + escaper(msg) + '</p>');
+    }
   }
 };
 
