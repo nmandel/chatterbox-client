@@ -1,5 +1,7 @@
 // YOUR CODE HERE:
 var rooms = [];
+var friends = [];
+var users = [];
 var currentRoom;
 var escaper = function(message) {
   var div = document.createElement('div');
@@ -16,28 +18,37 @@ var roomBuilder = function(room) {
     $('.room' + rooms.indexOf(room)).click(function() {
       currentRoom = room;
       $('.roomTracker').text(escaper(room));
-      console.log(currentRoom);
     });
   }
+};
 
+//not working yet
+var friendsSetter = function(username) {
+  if (friends.indexOf(username) === -1) {
+    $('.users' + users.indexOf(username)).click(function() {
+        console.log('.users' + users.indexOf(username));
+        friends.push(username);
+        $('.friends').append('<p>' + username + '</p>');
+    });
+  }
 };
 
 var messageDisplayer = function(messages, room) {
   $('.messages').html('');
   for (var i = 0; i < messages.results.length; i++) {
+    var name = messages.results[i].username;
+    var msg = messages.results[i].text;
     //call roomBuilder with new room
     roomBuilder(messages.results[i].roomname);
-    // console.log(messages.results[i].roomname);
-    // if(messages.results[i].roomname) {
-    //   //removes spaces in room name
-    //   var squishedRoom = messages.results[i].roomname.split(' ').join('');
-    // }
-    if ((messages.results[i].roomname === room || room === undefined)) {
-      // console.log(messages.results[i]);
-      var name = messages.results[i].username;
-      var msg = messages.results[i].text;
-      $('.messages').append('<p>' + escaper(name) + ': ' + escaper(msg) + '</p>');
+    if (users.indexOf(name) === -1) {
+      users.push(name);
     }
+
+    if ((messages.results[i].roomname === room || room === undefined)) {
+      $('.messages').append('<p class=user' + users.indexOf(name) + '>' + escaper(name) + ': ' + escaper(msg) + '</p>');
+    }
+    //friendsSetter not working yet
+    friendsSetter(name);
   }
 };
 
@@ -50,16 +61,7 @@ var getMessages = function() {
     data: {
       order: "-createdAt"
     },
-    // dataFilter: function(data, type) {
-    //   console.log(data);
-    //   for (var i = 0; i < data.results.length; i++) {
-    //     if (data.results[i].username !== "BRETTSPENCER") {
-    //       return data.results[i];
-    //     }
-    //   }
-    // },
     success: function (data) {
-      // console.log(data);
       messageDisplayer(data, currentRoom);
     },
     error: function (data) {
@@ -75,10 +77,8 @@ var sendMessage = function(message) {
     'text': message,
     'roomname': currentRoom
   };
-  // console.log(JSON.stringify(msgObj));
   $.ajax({
     // always use this url
-    //'order="-createdAt"
     url: 'https://api.parse.com/1/classes/chatterbox',
     type: 'POST',
     data: JSON.stringify(msgObj),

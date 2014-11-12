@@ -86,3 +86,6 @@ form input[type=text] {
 .rooms {
     float: left;
 }
+.friends {
+    float: right;
+}
